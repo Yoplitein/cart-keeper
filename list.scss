@@ -1,0 +1,54 @@
+@import "const.scss";
+
+&
+{
+    margin-top: calc(#{$barHeight} + 6px);
+}
+
+ul
+{
+    padding: 0px;
+}
+
+li
+{
+    list-style-type: none;
+    
+    margin-left: 5px;
+    padding: 3px;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+li + li
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-top: 1px dashed black;
+}
+
+input
+{
+    margin-left: 3px;
+}
+
+input[type="text"]
+{
+    flex-grow: 1;
+    max-width: 50vw;
+}
+
+input[type="number"]
+{
+    max-width: 20vw;
+}
+
+button
+{
+    width: 2em;
+    height: 2em;
+    padding: 0px;
+}

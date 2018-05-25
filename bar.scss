@@ -1,0 +1,27 @@
+@import "const.scss";
+
+&
+{
+    padding: 1px 3px;
+    background-color: #a3a3a3;
+    
+    position: fixed;
+    top: 0px;
+    
+    height: $barHeight;
+    width: 100%;
+    max-width: $maxBodyWidth;
+}
+
+button
+{
+    min-width: 2.5em;
+}
+
+label
+{
+    font-size: 125%;
+    
+    position: absolute;
+    right: 5px;
+}

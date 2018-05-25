@@ -1,0 +1,30 @@
+@import "const.scss";
+
+*
+{
+    box-sizing: border-box;
+}
+
+body
+{
+    padding: 0px;
+    background-color: #d3d3d3;
+    max-width: $maxBodyWidth;
+    margin: auto;
+}
+
+div#bar, div#list
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+div#bar
+{
+    @import "bar.scss";
+}
+
+div#list
+{
+    @import "list.scss";
+}
