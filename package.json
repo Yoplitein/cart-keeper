@@ -1,0 +1,13 @@
+{
+  "name": "cart-keeper",
+  "version": "0.0.1",
+  "main": "app.jsx",
+  "author": "Steven Dwy <yoplitein@gmail.com>",
+  "private": true,
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "sass": "^1.3.2"
+  }
+}
