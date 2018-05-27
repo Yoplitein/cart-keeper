@@ -14,10 +14,6 @@ class App extends React.Component
     {
         super(props);
         
-        this.add = this.add.bind(this);
-        this.clear = this.clear.bind(this);
-        this.updateListItem = this.updateListItem.bind(this);
-        this.deleteListItem = this.deleteListItem.bind(this);
         this.state = {
             items: [
                 Item("bread", 1.85),
@@ -30,7 +26,7 @@ class App extends React.Component
         }; //TODO: LocalStorage
     }
     
-    calculateSubtotal()
+    calculateSubtotal = () =>
     {
         let total = 0.0;
         
@@ -38,37 +34,37 @@ class App extends React.Component
             total += parseFloat(item.quantity) * parseFloat(item.cost);
         
         return total.toFixed(2);
-    }
+    };
     
-    add()
+    add = () =>
     {
         const items = this.state.items.slice(0);
         
         items.push(Item("", ""));
         this.setState({items: items});
-    }
+    };
     
-    clear()
+    clear = () =>
     {
         this.setState({items: []});
-    }
+    };
     
-    updateListItem(index, field, newValue)
+    updateListItem = (index, field, newValue) =>
     {
         const items = this.state.items.slice(0);
         items[index][field] = field == "cost" ? Dollars(newValue) : newValue;
         
         this.setState({items: items});
-    }
+    };
     
-    deleteListItem(index)
+    deleteListItem = (index) =>
     {
         let items = this.state.items.slice(0);
         items = items.slice(0, index).concat(items.slice(index + 1));
         
         console.log("deleteListItem", index, this.state.items, "=>", items);
         this.setState({items: items});
-    }
+    };
     
     render()
     {
