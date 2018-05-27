@@ -73,7 +73,7 @@ class App extends React.Component
     render()
     {
         return (
-            <form onSubmit={(event) => event.preventDefault()}>
+            <form onSubmit={event => event.preventDefault()}>
                 <Bar subtotal={this.calculateSubtotal()} add={this.add} clear={this.clear} />
                 <List items={this.state.items} updateListItem={this.updateListItem} deleteListItem={this.deleteListItem} />
             </form>
@@ -85,8 +85,8 @@ function Bar(props)
 {
     return (
         <div id="bar">
-            <button onSubmit={event => event.preventDefault()} onClick={props.add}>Add</button>
-            <button onSubmit={event => event.preventDefault()} onClick={props.clear}>Clear</button>
+            <button type="button" onClick={props.add}>Add</button>
+            <button type="button" onClick={props.clear}>Clear</button>
             <label>
                 Subtotal
                 $<span id="subtotal">{props.subtotal}</span>
@@ -192,7 +192,7 @@ class ListItem extends React.Component
                     onBlur={this.handleChange}
                 />
                 <span>${Dollars(this.props.quantity * this.props.cost)}</span>
-                <button onClick={() => this.props.deleteListItem(this.props.index)}>&#x274C;</button>
+                <button type="button" onClick={() => this.props.deleteListItem(this.props.index)}>&#x274C;</button>
             </li>
         );
     }
