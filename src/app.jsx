@@ -191,6 +191,7 @@ class ListItem extends React.Component
                     ref={costRef => this.costRef = costRef}
                     onBlur={this.handleChange}
                 />
+                <span>${this.props.quantity * this.props.cost}</span>
                 <button onClick={() => this.props.deleteListItem(this.props.index)}>&#x274C;</button>
             </li>
         );
