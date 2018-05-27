@@ -2,20 +2,17 @@ document.addEventListener(
     "DOMContentLoaded",
     async function()
     {
+        const pathPrefix = (document.querySelector("meta[name='scss-prefix']") || {"content": ""}).content;
+        const scssCompile = src => new Promise(resolve => Sass.compile(src, resolve));
+        const getLogicalPath = scriptTag => scriptTag.attributes["src"].value.replace(new RegExp(`^${pathPrefix}`), "");
+        
         async function getSourceOf(url)
         {
             return (await fetch(url)).text();
         }
         
-        const scssCompile = src => new Promise(resolve => Sass.compile(src, resolve));
-        
         for(const script of document.querySelectorAll("script[type='text/scss+import']"))
-        {
-            const unqualifiedName = script.attributes["src"].value; //script.src gives absolute URI
-            const src = await getSourceOf(script.src);
-            
-            Sass.writeFile(unqualifiedName, src);
-        }
+            Sass.writeFile(getLogicalPath(script), await getSourceOf(script.src));
         
         for(const script of document.querySelectorAll("script[type='text/scss']"))
         {
