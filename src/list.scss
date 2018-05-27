@@ -30,25 +30,43 @@ li + li
     border-top: 1px dashed black;
 }
 
-input
+li
 {
-    margin-left: 3px;
-}
-
-input[type="text"]
-{
-    flex-grow: 1;
-    max-width: 50vw;
-}
-
-input[type="number"]
-{
-    max-width: 20vw;
-}
-
-button
-{
-    width: 2em;
-    height: 2em;
-    padding: 0px;
+    input
+    {
+        margin-left: 3px;
+    }
+    
+    input[name="name"]
+    {
+        flex-grow: 2;
+        min-width: 4em;
+        max-width: 50%;
+    }
+    
+    input[name="quantity"]
+    {
+        flex-grow: 1;
+        width: 3em;
+    }
+    
+    input[name="cost"]
+    {
+        flex-grow: 1;
+        width: 4.25em;
+    }
+    
+    span
+    {
+        width: 4em;
+        padding: 0px 3px;
+        text-align: left;
+    }
+    
+    button
+    {
+        width: 2em;
+        height: 2em;
+        padding: 0px;
+    }
 }
