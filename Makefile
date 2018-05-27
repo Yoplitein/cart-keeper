@@ -2,6 +2,8 @@ JS_SRC = app.jsx
 SCSS_SRC = style.scss bar.scss const.scss list.scss
 
 dist: dist/app.js dist/style.css
+	cp node_modules/react/umd/react.production.min.js dist/react.js
+	cp node_modules/react-dom/umd/react-dom.production.min.js dist/react-dom.js
 
 .PHONY: clean
 clean:
