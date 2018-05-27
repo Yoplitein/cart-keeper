@@ -1,8 +1,10 @@
 const questionableUUID = () => (Date.now() * Math.random()).toFixed() //I'm sorry
 const Dollars = amount => (parseFloat(amount) || 0).toFixed(2);
-const Item = (name, cost) => ({
+const Quantity = amount => Math.max(parseFloat(amount) || 0, 1).toFixed();
+const Item = (name, cost, quantity = 1) => ({
     name: name,
     cost: Dollars(cost),
+    quantity: Quantity(quantity),
     id: questionableUUID(),
 });
 
@@ -33,7 +35,7 @@ class App extends React.Component
         let total = 0.0;
         
         for(const item of this.state.items)
-            total += parseFloat(item.cost);
+            total += parseFloat(item.quantity) * parseFloat(item.cost);
         
         return total.toFixed(2);
     }
@@ -101,6 +103,7 @@ function List(props)
                 key={item.id}
                 index={index}
                 name={item.name}
+                quantity={item.quantity}
                 cost={item.cost}
                 updateListItem={props.updateListItem}
                 deleteListItem={props.deleteListItem}
@@ -121,26 +124,33 @@ class ListItem extends React.Component
     constructor(props)
     {
         super(props);
-        
-        this.handleChange = this.handleChange.bind(this);
-        //this.handleCostChange = this.handleCostChange.bind(this);
     }
     
-    handleChange(event)
+    handleChange = event =>
     {
-        const type = event.target.type;
-        const value = event.target.value;
+        const name = event.target.name;
+        let value = event.target.value;
         
-        if(type == "text")
-            this.props.updateListItem(this.props.index, "name", value);
-        else if(type == "number")
-            this.props.updateListItem(this.props.index, "cost", value);
-        else
-            throw new Error("Unknown ListItem input of type " + type);
-    }
+        if(name == "quantity")
+            value = Quantity(value);
+        else if(name == "cost")
+            value = Dollars(value);
+        
+        this.props.updateListItem(this.props.index, name, value);
+    };
     
     componentDidUpdate(prevProps)
     {
+        if(this.quantityRef.value == "")
+        {
+            //input is invalid, revert to previous value
+            this.quantityRef.value = prevProps.quantity;
+            
+            this.props.updateListItem(this.props.index, "quantity", prevProps.quantity);
+        }
+        else if(this.quantityRef.value != this.props.quantity)
+            this.quantityRef.value = this.props.quantity; //input is out of sync, update it
+        
         if(this.costRef.value == "")
         {
             //input is invalid, revert to previous value
@@ -158,12 +168,23 @@ class ListItem extends React.Component
             <li>
                 <input
                     type="text"
+                    name="name"
                     placeholder="Item"
                     value={this.props.name}
                     onChange={this.handleChange}
                 />
                 <input
                     type="number"
+                    name="quantity"
+                    placeholder="Quantity"
+                    min="1"
+                    defaultValue={this.props.quantity}
+                    ref={quantityRef => this.quantityRef = quantityRef}
+                    onBlur={this.handleChange}
+                />
+                <input
+                    type="number"
+                    name="cost"
                     placeholder="Cost"
                     step="0.01"
                     defaultValue={this.props.cost}
