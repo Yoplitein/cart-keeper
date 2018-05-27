@@ -1,3 +1,26 @@
+/*
+    Compiles SCSS files on-the-fly in the browser. Minimal example:
+    
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <!-- Strips content from the head of imported SCSS files to calculate the logical path. Optional. -->
+        <meta name="scss-prefix" content="src">
+        
+        <!-- Dependencies and this script. -->
+        <script src="https://unpkg.com/sass.js@0.10.9/dist/sass.js"></script>
+        <script src="https://unpkg.com/sass.js@0.10.9/dist/sass.worker.js"></script>
+        <script src="compile-scss.js"></script>
+        
+        <!-- Add stylesheets like so: -->
+        <script type="text/scss" src="src/style.scss"></script>
+        <script type="text/scss+import" src="src/imported.scss"></script>
+    <head>
+    <body>
+        <!-- ... -->
+    </body>
+    </html>
+*/
 document.addEventListener(
     "DOMContentLoaded",
     async function()
@@ -5,11 +28,7 @@ document.addEventListener(
         const pathPrefix = (document.querySelector("meta[name='scss-prefix']") || {"content": ""}).content;
         const scssCompile = src => new Promise(resolve => Sass.compile(src, resolve));
         const getLogicalPath = scriptTag => scriptTag.attributes["src"].value.replace(new RegExp(`^${pathPrefix}`), "");
-        
-        async function getSourceOf(url)
-        {
-            return (await fetch(url)).text();
-        }
+        const getSourceOf = async url => (await fetch(url)).text();
         
         for(const script of document.querySelectorAll("script[type='text/scss+import']"))
             Sass.writeFile(getLogicalPath(script), await getSourceOf(script.src));
