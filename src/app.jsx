@@ -1,3 +1,8 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
+import "./style.scss";
+
 const questionableUUID = () => (Date.now() * Math.random()).toFixed() //I'm sorry
 const Dollars = amount => (parseFloat(amount) || 0).toFixed(2);
 const Quantity = amount => Math.max(parseFloat(amount) || 0, 1).toFixed();
@@ -194,7 +199,13 @@ class ListItem extends React.Component
     }
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-);
+function main()
+{
+    const root = document.createElement("div");
+    root.id = "root";
+    
+    document.body.appendChild(root);
+    ReactDOM.render(<App />, root);
+}
+
+main();
