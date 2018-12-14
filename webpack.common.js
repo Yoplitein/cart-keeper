@@ -1,20 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 
-module.exports =
-{
-    mode: "development",
+module.exports = {
     entry: "./src/app.jsx",
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
-    },
-    devServer: {
-        disableHostCheck: true,
-        host: "0.0.0.0",
-        port: 8760,
-        overlay: true,
-        contentBase: "./dist",
     },
     module: {
         rules: [
