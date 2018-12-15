@@ -63,7 +63,8 @@ class App extends React.Component
     
     clear = () =>
     {
-        this.setState({items: []});
+        if(window.confirm("Clear all items?"))
+            this.setState({items: []});
     };
     
     updateListItem = (index, field, newValue) =>
