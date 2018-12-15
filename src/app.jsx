@@ -52,7 +52,7 @@ class App extends React.Component
     updateListItem = (index, field, newValue) =>
     {
         const items = this.state.items.slice(0);
-        items[index][field] = field == "cost" ? Dollars(newValue) : newValue;
+        items[index][field] = newValue;
         
         this.setState({items: items});
     };
@@ -62,7 +62,6 @@ class App extends React.Component
         let items = this.state.items.slice(0);
         items = items.slice(0, index).concat(items.slice(index + 1));
         
-        console.log("deleteListItem", index, this.state.items, "=>", items);
         this.setState({items: items});
     };
     
