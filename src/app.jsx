@@ -127,42 +127,6 @@ class ListItem extends React.Component
         super(props);
     }
     
-    handleChange = event =>
-    {
-        const name = event.target.name;
-        let value = event.target.value;
-        
-        if(name == "quantity")
-            value = Quantity(value);
-        else if(name == "cost")
-            value = Dollars(value);
-        
-        this.props.updateListItem(this.props.index, name, value);
-    };
-    
-    componentDidUpdate(prevProps)
-    {
-        if(this.quantityRef.value == "")
-        {
-            //input is invalid, revert to previous value
-            this.quantityRef.value = prevProps.quantity;
-            
-            this.props.updateListItem(this.props.index, "quantity", prevProps.quantity);
-        }
-        else if(this.quantityRef.value != this.props.quantity)
-            this.quantityRef.value = this.props.quantity; //input is out of sync, update it
-        
-        if(this.costRef.value == "")
-        {
-            //input is invalid, revert to previous value
-            this.costRef.value = prevProps.cost;
-            
-            this.props.updateListItem(this.props.index, "cost", prevProps.cost);
-        }
-        else if(this.costRef.value != this.props.cost)
-            this.costRef.value = this.props.cost; //input is out of sync, update it
-    }
-    
     render()
     {
         return (
@@ -172,30 +136,62 @@ class ListItem extends React.Component
                     name="name"
                     placeholder="Item"
                     value={this.props.name}
-                    onChange={this.handleChange}
+                    onChange={event => this.props.updateListItem(this.props.index, "name", event.target.value)}
                 />
-                <input
-                    type="number"
+                <NumberField
                     name="quantity"
-                    placeholder="Quantity"
-                    min="1"
-                    defaultValue={this.props.quantity}
-                    ref={quantityRef => this.quantityRef = quantityRef}
-                    onBlur={this.handleChange}
+                    value={this.props.quantity}
+                    onChange={newValue => this.props.updateListItem(this.props.index, "quantity", Quantity(newValue))}
                 />
-                <input
-                    type="number"
+                <NumberField
                     name="cost"
-                    placeholder="Cost"
+                    min="0.01"
                     step="0.01"
-                    defaultValue={this.props.cost}
-                    ref={costRef => this.costRef = costRef}
-                    onBlur={this.handleChange}
+                    value={this.props.cost}
+                    onChange={newValue => this.props.updateListItem(this.props.index, "cost", Dollars(newValue))}
                 />
                 <span>${Dollars(this.props.quantity * this.props.cost)}</span>
                 <button type="button" onClick={() => this.props.deleteListItem(this.props.index)}>&#x274C;</button>
             </li>
         );
+    }
+}
+
+class NumberField extends React.Component
+{
+    constructor(props)
+    {
+        super(props);
+    }
+    
+    componentDidUpdate(prevProps)
+    {
+        if(this.ref.value == "")
+        {
+            //input is invalid, revert to previous value
+            this.ref.value = prevProps.value;
+            
+            this.props.onChange(this.props.name, prevProps.value);
+        }
+        else if(this.ref.value != this.props.value)
+            this.ref.value = this.props.value; //input is out of sync, update it
+    }
+    
+    render()
+    {
+        const {name, placeholder, min, max, step, value, onChange} = this.props;
+        
+        return <input
+            type="text"
+            name={name}
+            placeholder={placeholder || name.slice(0, 1).toUpperCase() + name.slice(1)}
+            min={min || 1}
+            max={max || 1e5}
+            step={step || 1}
+            defaultValue={value}
+            ref={ref => this.ref = ref}
+            onBlur={(event) => onChange(this.ref.value)}
+        />;
     }
 }
 
