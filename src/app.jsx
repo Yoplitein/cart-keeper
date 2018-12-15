@@ -5,6 +5,7 @@ import "./style.scss";
 
 const questionableUUID = () => (Date.now() * Math.random()).toFixed() //I'm sorry
 const Dollars = amount => (parseFloat(amount) || 0).toFixed(2);
+const Tax = amount => (parseFloat(amount) || 0).toFixed(2);
 const Weight = amount => (parseFloat(amount) || 0).toFixed(1);
 const Quantity = amount => Math.max(parseFloat(amount) || 0, 1).toFixed();
 const Item = (name, cost, quantity = 1, quantityConversion = Quantity) => ({
@@ -24,7 +25,8 @@ class App extends React.Component
         this.state = {
             items: [
                 Item("", 0),
-            ]
+            ],
+            taxRate: 0,
         }; //TODO: LocalStorage
     }
     
@@ -35,7 +37,12 @@ class App extends React.Component
         for(const item of this.state.items)
             total += parseFloat(item.quantity) * parseFloat(item.cost);
         
-        return total.toFixed(2);
+        return Dollars(total);
+    };
+    
+    calculateTax = (subtotal) =>
+    {
+        return Dollars(subtotal * (this.state.taxRate / 100));
     };
     
     add = () =>
@@ -77,10 +84,25 @@ class App extends React.Component
     
     render()
     {
+        const subtotal = this.calculateSubtotal();
+        const tax = this.calculateTax(subtotal);
+        
         return (
             <form onSubmit={event => event.preventDefault()}>
-                <Bar subtotal={this.calculateSubtotal()} add={this.add} addWeighted={this.addWeighted} clear={this.clear} />
-                <List items={this.state.items} updateListItem={this.updateListItem} deleteListItem={this.deleteListItem} />
+                <Bar
+                    subtotal={subtotal}
+                    tax={tax}
+                    taxRate={this.state.taxRate}
+                    setTaxRate={newTaxRate => this.setState({taxRate: newTaxRate})}
+                    add={this.add}
+                    addWeighted={this.addWeighted}
+                    clear={this.clear}
+                />
+                <List
+                    items={this.state.items}
+                    updateListItem={this.updateListItem}
+                    deleteListItem={this.deleteListItem}
+                />
             </form>
         );
     }
@@ -93,10 +115,26 @@ function Bar(props)
             <button type="button" onClick={props.add}>Add</button>
             <button type="button" onClick={props.addWeighted}>Add Weighted</button>
             <button type="button" onClick={props.clear}>Clear</button>
+            <br />
             <label>
-                Subtotal
-                $<span id="subtotal">{props.subtotal}</span>
+                Tax rate
+                <NumberField
+                    name="tax"
+                    step="0.25"
+                    value={props.taxRate}
+                    onChange={value => props.setTaxRate(Tax(value))}
+                />
             </label>
+            <ul>
+                <li>
+                    Subtotal
+                    $<span id="subtotal">{props.subtotal}</span>
+                </li>
+                <li>
+                    Tax
+                    $<span id="tax">{props.tax}</span>
+                </li>
+            </ul>
         </div>
     );
 }

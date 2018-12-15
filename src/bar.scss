@@ -18,10 +18,31 @@ button
     min-width: 2.5em;
 }
 
+ul
+{
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    
+    font-size: 125%;
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
 label
 {
-    font-size: 125%;
+    display: block;
+    margin: 5px 2px;
+}
+
+input
+{
+    width: 5em;
+    margin-left: 2px;
     
-    position: absolute;
-    right: 5px;
+    &:after
+    {
+        content: "%";
+    }
 }
