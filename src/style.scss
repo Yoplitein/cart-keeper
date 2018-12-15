@@ -8,9 +8,11 @@
 body
 {
     padding: 0px;
-    background-color: #d3d3d3;
     max-width: $maxBodyWidth;
     margin: auto;
+    
+    background-color: #d3d3d3;
+    font-family: sans-serif;
 }
 
 div#bar, div#list
