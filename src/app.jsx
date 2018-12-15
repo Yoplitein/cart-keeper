@@ -21,12 +21,7 @@ class App extends React.Component
         
         this.state = {
             items: [
-                Item("bread", 1.85),
-                Item("milk", 2.60),
-                Item("wine", 7.35),
-                Item("cheese", 2.05),
-                Item("meat", 14.50),
-                Item("salad", 3.50),
+                Item("", 0),
             ]
         }; //TODO: LocalStorage
     }
