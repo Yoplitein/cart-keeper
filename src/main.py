@@ -10,7 +10,7 @@ def handleUncaughtException(error):
 def make_app():
     from ckb.views import root
     
-    app = Flask("cart-keeper")
+    app = Flask("ckb")
     
     app.register_blueprint(root)
     app.register_error_handler(Exception, handleUncaughtException)
