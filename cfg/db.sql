@@ -1,0 +1,19 @@
+BEGIN;
+
+CREATE TABLE ck_list(
+    id SERIAL PRIMARY KEY,
+    key CHAR(40) NOT NULL UNIQUE,
+    taxRate REAL NOT NULL,
+    lastAccessed DATE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE ck_item(
+    id SERIAL PRIMARY KEY,
+    listID INTEGER REFERENCES ck_list(id) ON DELETE CASCADE,
+    isWeighted BOOLEAN NOT NULL,
+    name VARCHAR(256) NOT NULL,
+    quantity REAL NOT NULL,
+    price REAL NOT NULL
+);
+
+COMMIT;

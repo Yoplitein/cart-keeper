@@ -1,0 +1,2 @@
+FROM postgres:11.1-alpine
+ADD cfg/db.sql /docker-entrypoint-initdb.d/
