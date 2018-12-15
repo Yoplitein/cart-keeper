@@ -5,12 +5,14 @@ import "./style.scss";
 
 const questionableUUID = () => (Date.now() * Math.random()).toFixed() //I'm sorry
 const Dollars = amount => (parseFloat(amount) || 0).toFixed(2);
+const Weight = amount => (parseFloat(amount) || 0).toFixed(1);
 const Quantity = amount => Math.max(parseFloat(amount) || 0, 1).toFixed();
-const Item = (name, cost, quantity = 1) => ({
+const Item = (name, cost, quantity = 1, quantityConversion = Quantity) => ({
     name: name,
     cost: Dollars(cost),
-    quantity: Quantity(quantity),
+    quantity: quantityConversion(quantity),
     id: questionableUUID(),
+    quantityConversion: quantityConversion,
 });
 
 class App extends React.Component
@@ -40,7 +42,15 @@ class App extends React.Component
     {
         const items = this.state.items.slice(0);
         
-        items.push(Item("", ""));
+        items.push(Item("", 0));
+        this.setState({items: items});
+    };
+    
+    addWeighted = () =>
+    {
+        const items = this.state.items.slice(0);
+        
+        items.push(Item("", 0, 0, Weight));
         this.setState({items: items});
     };
     
@@ -69,7 +79,7 @@ class App extends React.Component
     {
         return (
             <form onSubmit={event => event.preventDefault()}>
-                <Bar subtotal={this.calculateSubtotal()} add={this.add} clear={this.clear} />
+                <Bar subtotal={this.calculateSubtotal()} add={this.add} addWeighted={this.addWeighted} clear={this.clear} />
                 <List items={this.state.items} updateListItem={this.updateListItem} deleteListItem={this.deleteListItem} />
             </form>
         );
@@ -81,6 +91,7 @@ function Bar(props)
     return (
         <div id="bar">
             <button type="button" onClick={props.add}>Add</button>
+            <button type="button" onClick={props.addWeighted}>Add Weighted</button>
             <button type="button" onClick={props.clear}>Clear</button>
             <label>
                 Subtotal
@@ -102,6 +113,7 @@ function List(props)
                 cost={item.cost}
                 updateListItem={props.updateListItem}
                 deleteListItem={props.deleteListItem}
+                quantityConversion={item.quantityConversion}
             />
     );
     
@@ -134,8 +146,9 @@ class ListItem extends React.Component
                 />
                 <NumberField
                     name="quantity"
+                    placeholder={this.props.quantityConversion.name}
                     value={this.props.quantity}
-                    onChange={newValue => this.props.updateListItem(this.props.index, "quantity", Quantity(newValue))}
+                    onChange={newValue => this.props.updateListItem(this.props.index, "quantity", this.props.quantityConversion(newValue))}
                 />
                 <NumberField
                     name="cost"
