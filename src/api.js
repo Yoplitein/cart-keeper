@@ -1,11 +1,9 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE = "./api";
 
 function request(suburl, body=null)
 {
     const url = `${API_BASE}${suburl}`;
     const haveBody = body !== null;
-    
-    console.log(`Fetching ${url}`);
     
     return fetch(url,
         {

@@ -29,7 +29,7 @@ class App extends React.Component
             ],
             taxRate: 0,
             key: "",
-        }; //TODO: LocalStorage
+        };
     }
     
     calculateSubtotal = () =>

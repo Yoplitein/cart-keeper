@@ -9,5 +9,11 @@ module.exports = merge(common, {
         port: 8760,
         overlay: true,
         contentBase: "./dist",
+        proxy: {
+            "/api": {
+                target: "http://localhost:5000",
+                pathRewrite: {"^/api": ""},
+            },
+        },
     },
 });
