@@ -27,5 +27,9 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "serve": "webpack-dev-server --config webpack.dev.js"
-  }
+  },
+  "browserslist": [
+    "last 5 chrome version",
+    "last 5 firefox version"
+  ]
 }
