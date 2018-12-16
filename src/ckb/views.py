@@ -55,6 +55,9 @@ def createList(body):
 def readList(key):
     touchList(key)
     
-    taxRate, _, items = getList(key)
-    
-    return jsonify(taxRate=taxRate, items=items)
+    try:
+        taxRate, _, items = getList(key)
+        
+        return jsonify(taxRate=taxRate, items=items)
+    except KeyError:
+        return jsonify(error="That list does not exist"), 404
