@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import "./style.scss";
+import {isApiAvailable, saveList, getList} from "./api.js"
 
 const questionableUUID = () => (Date.now() * Math.random()).toFixed() //I'm sorry
 const Dollars = amount => (parseFloat(amount) || 0).toFixed(2);
@@ -27,6 +28,7 @@ class App extends React.Component
                 Item("", 0),
             ],
             taxRate: 0,
+            key: "",
         }; //TODO: LocalStorage
     }
     
@@ -83,6 +85,76 @@ class App extends React.Component
         this.setState({items: items});
     };
     
+    saveList = async () =>
+    {
+        const list = {
+            taxRate: this.state.taxRate,
+            items: []
+        };
+        
+        for(const item of this.state.items)
+            list.items.push(
+                {
+                    name: item.name,
+                    cost: item.cost,
+                    quantity: item.quantity,
+                    isWeighted: item.quantityConversion === Weight,
+                }
+            );
+        
+        let response = await saveList(list);
+        
+        if(response.error)
+        {
+            alert(`Failed to save list: ${response.error.toLowerCase()}`);
+            
+            return;
+        }
+        
+        this.setState(
+            {key: response.key},
+            () =>
+            {
+                history.replaceState(history.state, "", `/?${this.state.key}`);
+                prompt("You can share the list with the URL below", document.location.toString());
+            }
+        );
+    };
+    
+    async loadList(key)
+    {
+        const list = await getList(key);
+        const items = [];
+        
+        for(const rawItem of list.items)
+            items.push(Item(rawItem.name, rawItem.price, rawItem.quantity, rawItem.isWeighted ? Weight : Quantity));
+        
+        this.setState(
+            {
+                key: key,
+                taxRate: list.taxRate,
+                items: items
+            }
+        );
+    }
+    
+    async componentDidMount()
+    {
+        if(!(await isApiAvailable()))
+        {
+            console.warn("API unavailable");
+            
+            return;
+        }
+        
+        const key = document.location.search.slice(1);
+        
+        if(key.length != 40)
+            return;
+        
+        this.loadList(key);
+    }
+    
     render()
     {
         const subtotal = this.calculateSubtotal();
@@ -98,6 +170,7 @@ class App extends React.Component
                     add={this.add}
                     addWeighted={this.addWeighted}
                     clear={this.clear}
+                    save={this.saveList}
                 />
                 <List
                     items={this.state.items}
@@ -116,6 +189,7 @@ function Bar(props)
             <button type="button" onClick={props.add}>Add</button>
             <button type="button" onClick={props.addWeighted}>Add Weighted</button>
             <button type="button" onClick={props.clear}>Clear</button>
+            <button type="button" onClick={props.save}>Save</button>
             <br />
             <label>
                 Tax rate
