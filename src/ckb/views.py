@@ -33,6 +33,9 @@ def createList(body):
     if not valid:
         return jsonify(error="Missing required keys"), 400
     
+    if len(body["items"]) == 0:
+        return jsonify(error="Cannot be empty"), 400
+    
     entropy = str(request.remote_addr)
     key = hashlib.sha1(
         (entropy + time.ctime()).encode()
