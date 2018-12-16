@@ -29,6 +29,7 @@ class App extends React.Component
             ],
             taxRate: 0,
             key: "",
+            haveAPI: false,
         };
     }
     
@@ -104,7 +105,7 @@ class App extends React.Component
         
         let response = await saveList(list);
         
-        if(response.error)
+        if(response.error !== undefined)
         {
             alert(`Failed to save list: ${response.error.toLowerCase()}`);
             
@@ -125,6 +126,13 @@ class App extends React.Component
     {
         const list = await getList(key);
         const items = [];
+        
+        if(list.error !== undefined)
+        {
+            alert(`Failed to load list: ${list.error.toLowerCase()}`);
+            
+            return;
+        }
         
         for(const rawItem of list.items)
             items.push(Item(rawItem.name, rawItem.price, rawItem.quantity, rawItem.isWeighted ? Weight : Quantity));
@@ -171,6 +179,7 @@ class App extends React.Component
                     addWeighted={this.addWeighted}
                     clear={this.clear}
                     save={this.saveList}
+                    canSave={this.state.haveAPI}
                 />
                 <List
                     items={this.state.items}
@@ -189,7 +198,7 @@ function Bar(props)
             <button type="button" onClick={props.add}>Add</button>
             <button type="button" onClick={props.addWeighted}>Add Weighted</button>
             <button type="button" onClick={props.clear}>Clear</button>
-            <button type="button" onClick={props.save}>Save</button>
+            <button type="button" onClick={props.save} disabled={!props.canSave}>Save</button>
             <br />
             <label>
                 Tax rate
