@@ -1,14 +1,16 @@
-const merge = require("webpack-merge");
+const {merge} = require("webpack-merge");
 const common = require("./webpack.common.js");
 
 module.exports = merge(common, {
     mode: "development",
     devServer: {
-        disableHostCheck: true,
+        allowedHosts: "all",
         host: "0.0.0.0",
         port: 8760,
-        overlay: true,
-        contentBase: "./dist",
+        client: {
+            overlay: true,
+        },
+        static: "./dist",
         proxy: {
             "/api": {
                 target: "http://localhost:5000",
